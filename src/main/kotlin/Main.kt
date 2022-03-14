@@ -263,6 +263,7 @@ fun main() {
                             break
                         } else {
                             println("operação nao identificada")
+                            readLine()
                         }
                     }
 
@@ -295,8 +296,13 @@ fun main() {
                                 if (espec.setNome(nome)) {
                                     println("Nome editado com sucesso")
                                     gerencia.atualizarEspectador(cpf, espec)
+                                    println("Aperte ENTER para continuar")
+                                    readLine()
+
                                 } else {
                                     println("Nome não editado")
+                                    println("Aperte ENTER para continuar")
+                                    readLine()
                                 }
                             }
                             2 -> {
@@ -305,8 +311,12 @@ fun main() {
                                 if (espec.setCpf(cpfN)) {
                                     println("CPF editado com sucesso")
                                     gerencia.atualizarEspectador(cpf, espec)
+                                    println("Aperte ENTER para continuar")
+                                    readLine()
                                 } else {
                                     println("CPF não editado")
+                                    println("Aperte ENTER para continuar")
+                                    readLine()
                                 }
                             }
                             3 -> {
@@ -315,8 +325,12 @@ fun main() {
                                 if (espec.setRg(rg)) {
                                     println("RG editado com sucesso")
                                     gerencia.atualizarEspectador(cpf, espec)
+                                    println("Aperte ENTER para continuar")
+                                    readLine()
                                 } else {
                                     println("RG não editado")
+                                    println("Aperte ENTER para continuar")
+                                    readLine()
                                 }
                             }
                             4 -> {
@@ -325,14 +339,20 @@ fun main() {
                                 if (espec.setEmail(email)) {
                                     println("Email editado com sucesso")
                                     gerencia.atualizarEspectador(cpf, espec)
+                                    println("Aperte ENTER para continuar")
+                                    readLine()
                                 } else {
                                     println("Email não editado")
+                                    println("Aperte ENTER para continuar")
+                                    readLine()
                                 }
                             }
                             5 -> println("Saindo do modo Edição")
                         }
                     } else {
                         println("CPF Incorreto ou Não Existe")
+                        println("Aperte ENTER para continuar")
+                        readLine()
                     }
                 } while (opcEdicao != 5)
             }

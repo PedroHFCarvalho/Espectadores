@@ -42,11 +42,11 @@ class Sessao() {
         this.listAssentos[key] = espectador
     }
 
-    fun reduzirAssentoPcd() {
+    private fun reduzirAssentoPcd() {
         this.assentoPcdAtual = this.assentoPcdAtual - 1
     }
 
-    fun reduzirAssento() {
+    private fun reduzirAssento() {
         this.assentoAtual = this.assentoAtual - 1
     }
 
