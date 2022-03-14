@@ -1,13 +1,11 @@
-import BLL.Espectador
-import BLL.Gerencia
+import BLL.*
 
 fun main() {
 
-    val listAssentos = mutableMapOf<Int, Espectador>()
+    val sessao = Sessao()
+    val gerencia = Gerencia()
     val listEspectadores = mutableMapOf<String, Espectador>()
     var cliente: Espectador
-    var assento = 0
-    var assentoPCDs = 25
     var opc = 0
 
 
@@ -16,7 +14,7 @@ fun main() {
     println("Por favor digite o numero máximo de cadeiras na plateia")
     while (true) {
         try {
-            assento = readLine()!!.toInt()
+            sessao.setAssento(readLine()!!.toInt())
             break
         } catch (e: Exception) {
             println("Digite o numero máximo de cadeiras na plateia novamente")
@@ -25,29 +23,35 @@ fun main() {
     println("Por favor digite o numero máximo de cadeiras na plateia reservadas para PCDs")
     while (true) {
         try {
-            assentoPCDs = readLine()!!.toInt()
+            sessao.setAssentoPcd(readLine()!!.toInt())
             break
         } catch (e: Exception) {
             println("Digite o numero máximo de cadeiras para PCDs na plateia novamente")
         }
     }
-    while (assentoPCDs >= assento) {
+    while (sessao.validarAssento()) {
         println("Numero de assentos PCDs é maior que o numero total de cadeiras, Porfavor digite novamente")
         println("Por favor digite o numero máximo de cadeiras na plateia reservadas para PCDs")
         try {
-            assentoPCDs = readLine()!!.toInt()
+            sessao.setAssentoPcd(readLine()!!.toInt())
         } catch (_: Exception) {
 
         }
     }
     println("_______________________________________")
-    assento -= assentoPCDs
 
     do {
         println("_______________________________________")
-        println("Assentos livres: $assento\nAssentos livres PCDs $assentoPCDs")
-        Gerencia.menu()
+        println("Assentos livres: ${sessao.getAssentoAtual()}\nAssentos livres PCDs ${sessao.getAssentoPcdAtual()}")
+        println("Digite 1 - Adicionar Espectador")
+        println("Digite 2 - Consultar uma Cadeira")
+        println("Digite 3 - Listar todas as cadeiras")
+        println("Digite 4 - Editar Cadeira")
+        println("Digite 5 - Remover Cadeira")
+        println("Digite 6 - Editar Espectador")
+        println("Digite 7 - Sair")
         println("_______________________________________")
+        println("Digite o numero da Operação")
         try {
             opc = readLine()!!.toInt()
         } catch (_: Exception) {
@@ -57,17 +61,18 @@ fun main() {
             1 -> {
                 println("PCD ou Não [s/n]")
                 val yesOrNot = readLine()!!
+
                 var cpf: String
                 var rg: String
                 var email: String
 
                 println("Nome:")
-                var nome = readLine()!!
+                val nome = readLine()!!
                 println("CPF:")
                 while (true) {
                     try {
                         cpf = readLine()!!
-                        Espectador.validaCpf(cpf)
+                        Pessoa.validaCpf(cpf)
                         break
                     } catch (e: Exception) {
                         println(e.message)
@@ -78,7 +83,7 @@ fun main() {
                     println("RG:")
                     try {
                         rg = readLine()!!
-                        Espectador.validaRg(rg)
+                        Pessoa.validaRg(rg)
                         break
                     } catch (e: Exception) {
                         println(e.message)
@@ -90,7 +95,7 @@ fun main() {
                     println("Email:")
                     try {
                         email = readLine()!!
-                        Espectador.validaEmail(email)
+                        Pessoa.validaEmail(email)
                         break
                     } catch (e: Exception) {
                         println(e.message)
@@ -99,31 +104,29 @@ fun main() {
 
                 }
 
-                cliente = Espectador(nome, cpf, rg, email)
-                listEspectadores[cliente.cpf] = cliente
+                if (yesOrNot.compareTo("n", true) == 0 && sessao.getAssento() != 0) {
 
-
-
-                if (yesOrNot.compareTo("n", true) == 0 && assento != 0) {
-
-                    listAssentos[assento] = cliente
-                    cliente.assento = assento
-                    assento--
-
+                    cliente = Espectador(nome, cpf, rg, email, false)
+                    gerencia.addEspectador(cliente.getCpf(),cliente)
+                    sessao.addAssento(sessao.getAssentoAtual(), cliente)
+                    cliente.setAssento(sessao.getAssentoAtual())
+                    sessao.reduzirAssento()
                     println("Pessoa adicionado com secesso")
                     println("Aperte ENTER para continuar")
                     readLine()
 
-                } else if (yesOrNot.compareTo("s", true) == 0 && assentoPCDs != 0) {
+                } else if (yesOrNot.compareTo("s", true) == 0 && sessao.getAssentoPcdAtual() != 0) {
 
-                    listAssentos[assentoPCDs] = cliente
-                    cliente.assento = assentoPCDs
-                    assentoPCDs--
+                    cliente = Espectador(nome, cpf, rg, email, true)
+                    gerencia.addEspectador(cliente.getCpf(),cliente)
+                    sessao.addAssento(sessao.getAssentoPcdAtual(), cliente)
+                    cliente.setAssento(sessao.getAssentoPcdAtual())
+                    sessao.reduzirAssentoPcd()
                     println("Pessoa adicionado com secesso")
                     println("Aperte ENTER para continuar")
                     readLine()
 
-                } else if (assento == 0 && assentoPCDs == 0) {
+                } else if (sessao.getAssentoAtual() == 0 && sessao.getAssentoPcdAtual() == 0) {
                     println("Sem Ingressos a venda")
                     println("Aperte ENTER para continuar")
                     readLine()
@@ -146,14 +149,16 @@ fun main() {
                 }
 
 
-                if (listAssentos.containsKey(cadeira)) {
-                    println("${listAssentos[cadeira]?.nome} esta nesta cadeira")
+                if (sessao.consultarCadeiraVazia(cadeira)) {
+                    val espec = sessao.consultarEspectador(cadeira)
+                    println("${espec.getNome()} esta nesta cadeira")
                     println("Aperte ENTER para continuar")
                     readLine()
                 }
             }
             3 -> {
-                listAssentos.forEach {
+                val lista = sessao.consultarSessao()
+                lista.forEach {
                     println(it.toString())
                 }
                 println("Aperte ENTER para continuar")
@@ -171,8 +176,9 @@ fun main() {
                     }
                 }
 
-                if (listAssentos.containsKey(cadeira)) {
-                    println("${listAssentos[cadeira]?.nome} esta nesta cadeira")
+                if (sessao.consultarCadeiraVazia(cadeira)) {
+                    val espec = sessao.consultarEspectador(cadeira)
+                    println("${espec.getNome()} esta nesta cadeira")
                     println("Digite os dados da nova pessoa: ")
 
                     println("Nome:")
@@ -181,12 +187,13 @@ fun main() {
                     var cpf: String
                     var rg: String
                     var email: String
+                    val pcd = espec.getPcd()
 
                     println("CPF:")
                     while (true) {
                         try {
                             cpf = readLine()!!
-                            Espectador.validaCpf(cpf)
+                            Pessoa.validaCpf(cpf)
                             break
                         } catch (e: Exception) {
                             println(e.message)
@@ -197,7 +204,7 @@ fun main() {
                         println("RG:")
                         try {
                             rg = readLine()!!
-                            Espectador.validaRg(rg)
+                            Pessoa.validaRg(rg)
                             break
                         } catch (e: Exception) {
                             println(e.message)
@@ -209,7 +216,7 @@ fun main() {
                         println("Email:")
                         try {
                             email = readLine()!!
-                            Espectador.validaEmail(email)
+                            Pessoa.validaEmail(email)
                             break
                         } catch (e: Exception) {
                             println(e.message)
@@ -218,10 +225,10 @@ fun main() {
 
                     }
 
-                    cliente = Espectador(nome, cpf, rg, email)
+                    cliente = Espectador(nome, cpf, rg, email, pcd)
+                    cliente.setAssento(cadeira)
+                    sessao.addAssento(cadeira, cliente)
 
-                    listAssentos[cadeira] = cliente
-                    cliente.assento = cadeira
                     println("Pessoa atualizada com sucesso")
                     println("Aperte ENTER para continuar")
                     readLine()
@@ -239,14 +246,15 @@ fun main() {
                         println("Digite o numero da cadeira novamente")
                     }
                 }
-                if (listAssentos.containsKey(cadeira)) {
-                    println("${listAssentos[cadeira]?.nome} esta nesta cadeira")
+                if (sessao.consultarCadeiraVazia(cadeira)) {
+                    val espec = sessao.consultarEspectador(cadeira)
+                    println("${espec.getNome()} esta nesta cadeira")
 
                     println("deseja realmente cancelar esse ingresso? [s/n]")
                     val yesOrNot = readLine()!!
                     while (true) {
                         if (yesOrNot.compareTo("s", true) == 0) {
-                            listAssentos.remove(cadeira)
+                            sessao.removerAssento(cadeira, espec)
                             println("Ingresso cancelado com sucesso")
                             println("Aperte ENTER para continuar")
                             readLine()
@@ -264,53 +272,58 @@ fun main() {
                 }
 
             }
-            6 ->{
+            6 -> {
                 println("Digite o sue CPF")
                 val cpf = readLine()!!
-                if (listEspectadores.containsKey(cpf)) {
-                    println(listEspectadores[cpf]?.apresentar())
+                if (gerencia.consultarEspectadorVazio(cpf)) {
+                    val espec = gerencia.consultarEspectador(cpf)
+                    println(espec.apresentar())
 
                     println("Digite 1 - Mudar o nome")
                     println("Digite 2 - Mudar CPF")
                     println("Digite 3 - Mudar RG")
                     println("Digite 4 - Mudar Email")
 
-                    var opc = readLine()!!.toInt()
+                    val opc = readLine()!!.toInt()
 
-                    when(opc){
+                    when (opc) {
                         1 -> {
                             println("Digite o novo nome")
-                            var nome = readLine()!!
-                            if(listEspectadores[cpf]?.setNome(nome) == true){
+                            val nome = readLine()!!
+                            if (espec.setNome(nome)) {
                                 println("Nome editado com sucesso")
-                            }else{
+                                gerencia.atualizarEspec(cpf,espec)
+                            } else {
                                 println("Nome não editado")
                             }
                         }
                         2 -> {
                             println("Digite o novo CPF")
-                            var cpfN = readLine()!!
-                            if(listEspectadores[cpf]?.setCpf(cpfN) == true){
+                            val cpfN = readLine()!!
+                            if (espec.setCpf(cpfN)) {
                                 println("CPF editado com sucesso")
-                            }else{
+                                gerencia.atualizarEspec(cpf,espec)
+                            } else {
                                 println("CPF não editado")
                             }
                         }
                         3 -> {
                             println("Digite o novo RG")
-                            var rg = readLine()!!
-                            if(listEspectadores[cpf]?.setRg(rg) == true){
+                            val rg = readLine()!!
+                            if (espec.setRg(rg)) {
                                 println("RG editado com sucesso")
-                            }else{
+                                gerencia.atualizarEspec(cpf,espec)
+                            } else {
                                 println("RG não editado")
                             }
                         }
                         4 -> {
                             println("Digite o novo Email")
-                            var email = readLine()!!
-                            if(listEspectadores[cpf]?.setEmail(email) == true){
+                            val email = readLine()!!
+                            if (espec.setEmail(email)) {
                                 println("Email editado com sucesso")
-                            }else{
+                                gerencia.atualizarEspec(cpf,espec)
+                            } else {
                                 println("Email não editado")
                             }
                         }

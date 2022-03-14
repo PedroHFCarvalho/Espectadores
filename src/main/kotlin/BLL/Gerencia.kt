@@ -1,20 +1,21 @@
 package BLL
 
-import java.util.regex.Pattern
-
 class Gerencia {
+    private val listEspectadores = mutableMapOf<String, Espectador>()
 
-    companion object{
-        fun menu() {
-            println("Digite 1 - Adicionar Espectador")
-            println("Digite 2 - Consultar uma Cadeira")
-            println("Digite 3 - Listar todas as cadeiras")
-            println("Digite 4 - Editar Cadeira")
-            println("Digite 5 - Remover Cadeira")
-            println("Digite 6 - Editar Espectador")
-            println("Digite 7 - Sair")
-        }
-
+    fun addEspectador(key: String,espectador: Espectador){
+        listEspectadores[key] = espectador
     }
 
+    fun consultarEspectadorVazio(key: String): Boolean {
+        return this.listEspectadores.containsKey(key)
+    }
+
+    fun consultarEspectador(key: String): Espectador{
+        return this.listEspectadores[key]!!.getEspec()
+    }
+
+    fun atualizarEspec(key: String,espectador: Espectador){
+        listEspectadores[key] = espectador
+    }
 }
