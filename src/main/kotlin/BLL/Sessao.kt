@@ -4,10 +4,10 @@ class Sessao() {
 
     private val listAssentos = mutableMapOf<Int, Espectador>()
 
-    private var assentoTotal: Int = 0
-    private var assentoAtual: Int = 0
-    private var assentoPcdTotal: Int = 0
-    private var assentoPcdAtual: Int = 0
+    private var assentoTotal: Int = 1
+    private var assentoAtual: Int = 1
+    private var assentoPcdTotal: Int = 1
+    private var assentoPcdAtual: Int = 1
 
 
     fun consultarCadeiraVazia(key: Int): Boolean {
@@ -43,28 +43,26 @@ class Sessao() {
     }
 
     fun reduzirAssentoPcd() {
-        this.assentoPcdAtual--
+        this.assentoPcdAtual = this.assentoPcdAtual - 1
     }
 
     fun reduzirAssento() {
-        this.assentoAtual--
+        this.assentoAtual = this.assentoAtual - 1
     }
 
     private fun aumentarAssentoPcd() {
-        this.assentoPcdAtual++
+        this.assentoPcdAtual = this.assentoPcdAtual + 1
     }
 
     private fun aumentarAssento() {
-        this.assentoAtual++
+        this.assentoAtual = this.assentoAtual + 1
     }
 
     fun addAssento(key: Int, espectador: Espectador) {
         if (espectador.getPcd()) {
             listAssentos[key] = espectador
-            reduzirAssentoPcd()
         } else {
             listAssentos[key] = espectador
-            reduzirAssento()
         }
     }
 
@@ -72,9 +70,11 @@ class Sessao() {
         if (espectador.getPcd()) {
             listAssentos.remove(key)
             aumentarAssentoPcd()
+            espectador.setAssento(0)
         } else {
             listAssentos.remove(key)
             aumentarAssento()
+            espectador.setAssento(0)
         }
     }
 

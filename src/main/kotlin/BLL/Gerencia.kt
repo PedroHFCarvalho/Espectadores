@@ -18,4 +18,6 @@ class Gerencia {
     fun atualizarEspec(key: String,espectador: Espectador){
         listEspectadores[key] = espectador
     }
+
+
 }

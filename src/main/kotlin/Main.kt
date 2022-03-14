@@ -4,7 +4,6 @@ fun main() {
 
     val sessao = Sessao()
     val gerencia = Gerencia()
-    val listEspectadores = mutableMapOf<String, Espectador>()
     var cliente: Espectador
     var opc = 0
 
@@ -79,8 +78,8 @@ fun main() {
                         println("Digite o CPF novamente:")
                     }
                 }
+                println("RG:")
                 while (true) {
-                    println("RG:")
                     try {
                         rg = readLine()!!
                         Pessoa.validaRg(rg)
@@ -91,8 +90,8 @@ fun main() {
                     }
 
                 }
+                println("Email:")
                 while (true) {
-                    println("Email:")
                     try {
                         email = readLine()!!
                         Pessoa.validaEmail(email)
@@ -107,7 +106,7 @@ fun main() {
                 if (yesOrNot.compareTo("n", true) == 0 && sessao.getAssento() != 0) {
 
                     cliente = Espectador(nome, cpf, rg, email, false)
-                    gerencia.addEspectador(cliente.getCpf(),cliente)
+                    gerencia.addEspectador(cliente.getCpf(), cliente)
                     sessao.addAssento(sessao.getAssentoAtual(), cliente)
                     cliente.setAssento(sessao.getAssentoAtual())
                     sessao.reduzirAssento()
@@ -118,11 +117,11 @@ fun main() {
                 } else if (yesOrNot.compareTo("s", true) == 0 && sessao.getAssentoPcdAtual() != 0) {
 
                     cliente = Espectador(nome, cpf, rg, email, true)
-                    gerencia.addEspectador(cliente.getCpf(),cliente)
+                    gerencia.addEspectador(cliente.getCpf(), cliente)
                     sessao.addAssento(sessao.getAssentoPcdAtual(), cliente)
                     cliente.setAssento(sessao.getAssentoPcdAtual())
                     sessao.reduzirAssentoPcd()
-                    println("Pessoa adicionado com secesso")
+                    println("Pessoa adicionado com sucesso")
                     println("Aperte ENTER para continuar")
                     readLine()
 
@@ -151,9 +150,11 @@ fun main() {
 
                 if (sessao.consultarCadeiraVazia(cadeira)) {
                     val espec = sessao.consultarEspectador(cadeira)
-                    println("${espec.getNome()} esta nesta cadeira")
+                    println("${espec.apresentar()}")
                     println("Aperte ENTER para continuar")
                     readLine()
+                } else {
+                    println("Cadeira Vazia")
                 }
             }
             3 -> {
@@ -248,7 +249,7 @@ fun main() {
                 }
                 if (sessao.consultarCadeiraVazia(cadeira)) {
                     val espec = sessao.consultarEspectador(cadeira)
-                    println("${espec.getNome()} esta nesta cadeira")
+                    println("${espec.apresentar()}")
 
                     println("deseja realmente cancelar esse ingresso? [s/n]")
                     val yesOrNot = readLine()!!
@@ -273,66 +274,76 @@ fun main() {
 
             }
             6 -> {
+
+
                 println("Digite o sue CPF")
                 val cpf = readLine()!!
-                if (gerencia.consultarEspectadorVazio(cpf)) {
-                    val espec = gerencia.consultarEspectador(cpf)
-                    println(espec.apresentar())
+                var opcEdicao = 0
+                do {
+                    if (gerencia.consultarEspectadorVazio(cpf)) {
+                        val espec = gerencia.consultarEspectador(cpf)
+                        println(espec.apresentar())
 
-                    println("Digite 1 - Mudar o nome")
-                    println("Digite 2 - Mudar CPF")
-                    println("Digite 3 - Mudar RG")
-                    println("Digite 4 - Mudar Email")
+                        println("Digite 1 - Mudar o nome")
+                        println("Digite 2 - Mudar CPF")
+                        println("Digite 3 - Mudar RG")
+                        println("Digite 4 - Mudar Email")
+                        println("Digite 5 - Sair do Modo Edição")
 
-                    val opc = readLine()!!.toInt()
+                        opcEdicao = readLine()!!.toInt()
 
-                    when (opc) {
-                        1 -> {
-                            println("Digite o novo nome")
-                            val nome = readLine()!!
-                            if (espec.setNome(nome)) {
-                                println("Nome editado com sucesso")
-                                gerencia.atualizarEspec(cpf,espec)
-                            } else {
-                                println("Nome não editado")
+                        when (opcEdicao) {
+                            1 -> {
+                                println("Digite o novo nome")
+                                val nome = readLine()!!
+                                if (espec.setNome(nome)) {
+                                    println("Nome editado com sucesso")
+                                    gerencia.atualizarEspec(cpf, espec)
+                                } else {
+                                    println("Nome não editado")
+                                }
                             }
-                        }
-                        2 -> {
-                            println("Digite o novo CPF")
-                            val cpfN = readLine()!!
-                            if (espec.setCpf(cpfN)) {
-                                println("CPF editado com sucesso")
-                                gerencia.atualizarEspec(cpf,espec)
-                            } else {
-                                println("CPF não editado")
+                            2 -> {
+                                println("Digite o novo CPF")
+                                val cpfN = readLine()!!
+                                if (espec.setCpf(cpfN)) {
+                                    println("CPF editado com sucesso")
+                                    gerencia.atualizarEspec(cpf, espec)
+                                } else {
+                                    println("CPF não editado")
+                                }
                             }
-                        }
-                        3 -> {
-                            println("Digite o novo RG")
-                            val rg = readLine()!!
-                            if (espec.setRg(rg)) {
-                                println("RG editado com sucesso")
-                                gerencia.atualizarEspec(cpf,espec)
-                            } else {
-                                println("RG não editado")
+                            3 -> {
+                                println("Digite o novo RG")
+                                val rg = readLine()!!
+                                if (espec.setRg(rg)) {
+                                    println("RG editado com sucesso")
+                                    gerencia.atualizarEspec(cpf, espec)
+                                } else {
+                                    println("RG não editado")
+                                }
                             }
-                        }
-                        4 -> {
-                            println("Digite o novo Email")
-                            val email = readLine()!!
-                            if (espec.setEmail(email)) {
-                                println("Email editado com sucesso")
-                                gerencia.atualizarEspec(cpf,espec)
-                            } else {
-                                println("Email não editado")
+                            4 -> {
+                                println("Digite o novo Email")
+                                val email = readLine()!!
+                                if (espec.setEmail(email)) {
+                                    println("Email editado com sucesso")
+                                    gerencia.atualizarEspec(cpf, espec)
+                                } else {
+                                    println("Email não editado")
+                                }
                             }
+                            5 -> println("Saindo do modo Edição")
                         }
+                    } else {
+                        println("CPF Incorreto ou Não Existe")
                     }
-
-                }
+                } while (opcEdicao != 5)
             }
 
-            7 -> println("Programa foi finalizado")
+            7 -> {
+                println("Programa foi finalizado")
+            }
 
             else -> {
                 println("Não foi possível verificar a operação")
@@ -341,7 +352,7 @@ fun main() {
             }
         }
 
-    } while (opc != 6)
+    } while (opc != 7)
 
 }
 

@@ -31,6 +31,7 @@ abstract class Pessoa(
             val matcher = pattern.matcher(rg)
             if (!matcher.matches()) {
                 isValid = false
+                throw Exception("RG Incorreto")
             }
             return isValid
         }
@@ -42,6 +43,7 @@ abstract class Pessoa(
             val matcher = pattern.matcher(email)
             if (!matcher.matches()) {
                 isValid = false
+                throw Exception("Email Incorreto")
             }
             return isValid
 
@@ -106,7 +108,7 @@ abstract class Pessoa(
     }
 
     @JvmName("getPcdX")
-    fun getPcd(): Boolean{
+    fun getPcd(): Boolean {
         return this.pcd
     }
     @JvmName("setPcdX")
