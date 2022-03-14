@@ -1,25 +1,25 @@
-package BLL
+package bll
 
 class Sessao() {
 
     private val listAssentos = mutableMapOf<Int, Espectador>()
 
-    private var assentoTotal: Int = 1
+    private var assentoTotal: Int = 0
     private var assentoAtual: Int = 1
     private var assentoPcdTotal: Int = 1
     private var assentoPcdAtual: Int = 1
 
 
     fun consultarCadeiraVazia(key: Int): Boolean {
-        return listAssentos.containsKey(key)
+        return this.listAssentos.containsKey(key)
     }
 
     fun consultarSessao(): MutableMap<Int, Espectador> {
-        return listAssentos
+        return this.listAssentos
     }
 
     fun consultarEspectador(key: Int): Espectador {
-        return listAssentos[key]!!.getEspec()
+        return this.listAssentos[key]!!.getEspectador()
     }
 
     fun validarAssento(): Boolean {
@@ -39,7 +39,7 @@ class Sessao() {
     }
 
     fun atualizarEspec(key: Int, espectador: Espectador) {
-        listAssentos[key] = espectador
+        this.listAssentos[key] = espectador
     }
 
     fun reduzirAssentoPcd() {
@@ -60,19 +60,23 @@ class Sessao() {
 
     fun addAssento(key: Int, espectador: Espectador) {
         if (espectador.getPcd()) {
-            listAssentos[key] = espectador
+            this.listAssentos[key] = espectador
+            espectador.setAssento(key)
+            reduzirAssentoPcd()
         } else {
-            listAssentos[key] = espectador
+            this.listAssentos[key] = espectador
+            espectador.setAssento(key)
+            reduzirAssento()
         }
     }
 
     fun removerAssento(key: Int, espectador: Espectador) {
         if (espectador.getPcd()) {
-            listAssentos.remove(key)
+            this.listAssentos.remove(key)
             aumentarAssentoPcd()
             espectador.setAssento(0)
         } else {
-            listAssentos.remove(key)
+            this.listAssentos.remove(key)
             aumentarAssento()
             espectador.setAssento(0)
         }

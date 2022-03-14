@@ -1,5 +1,4 @@
-package BLL
-
+package bll
 
 data class Espectador(
     override var nome: String,
@@ -17,10 +16,9 @@ data class Espectador(
         cpf: String,
         rg: String,
         email: String,
-        assento: Int,
-        pdc: Boolean
+        pdc: Boolean,
+        assento: Int
     ) : this(nome, cpf, rg, email, pdc) {
-
         this.assento = assento
     }
 
@@ -45,10 +43,9 @@ data class Espectador(
         this.assento = assento
     }
 
-    fun getEspec(): Espectador{
+    fun getEspectador(): Espectador {
         return this
     }
-
 
     override fun apresentar(): String {
         return "Nome: $nome\n" +

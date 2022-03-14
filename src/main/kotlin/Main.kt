@@ -1,4 +1,4 @@
-import BLL.*
+import bll.*
 
 fun main() {
 
@@ -6,7 +6,6 @@ fun main() {
     val gerencia = Gerencia()
     var cliente: Espectador
     var opc = 0
-
 
     println("_______________________________________")
     println("Primeira Inicialização")
@@ -29,7 +28,7 @@ fun main() {
         }
     }
     while (sessao.validarAssento()) {
-        println("Numero de assentos PCDs é maior que o numero total de cadeiras, Porfavor digite novamente")
+        println("Numero de assentos PCDs é maior que o numero total de cadeiras, Por favor digite novamente")
         println("Por favor digite o numero máximo de cadeiras na plateia reservadas para PCDs")
         try {
             sessao.setAssentoPcd(readLine()!!.toInt())
@@ -37,7 +36,6 @@ fun main() {
 
         }
     }
-    println("_______________________________________")
 
     do {
         println("_______________________________________")
@@ -108,8 +106,7 @@ fun main() {
                     cliente = Espectador(nome, cpf, rg, email, false)
                     gerencia.addEspectador(cliente.getCpf(), cliente)
                     sessao.addAssento(sessao.getAssentoAtual(), cliente)
-                    cliente.setAssento(sessao.getAssentoAtual())
-                    sessao.reduzirAssento()
+
                     println("Pessoa adicionado com secesso")
                     println("Aperte ENTER para continuar")
                     readLine()
@@ -119,8 +116,7 @@ fun main() {
                     cliente = Espectador(nome, cpf, rg, email, true)
                     gerencia.addEspectador(cliente.getCpf(), cliente)
                     sessao.addAssento(sessao.getAssentoPcdAtual(), cliente)
-                    cliente.setAssento(sessao.getAssentoPcdAtual())
-                    sessao.reduzirAssentoPcd()
+
                     println("Pessoa adicionado com sucesso")
                     println("Aperte ENTER para continuar")
                     readLine()
@@ -137,7 +133,7 @@ fun main() {
             }
             2 -> {
                 println("Digite o numero da cadeira a ser consultada")
-                var cadeira = 0
+                var cadeira: Int
                 while (true) {
                     try {
                         cadeira = readLine()!!.toInt()
@@ -150,7 +146,7 @@ fun main() {
 
                 if (sessao.consultarCadeiraVazia(cadeira)) {
                     val espec = sessao.consultarEspectador(cadeira)
-                    println("${espec.apresentar()}")
+                    println(espec.apresentar())
                     println("Aperte ENTER para continuar")
                     readLine()
                 } else {
@@ -167,7 +163,7 @@ fun main() {
             }
             4 -> {
                 println("Digite o numero da cadeira a ser atualizada")
-                var cadeira = 0
+                var cadeira: Int
                 while (true) {
                     try {
                         cadeira = readLine()!!.toInt()
@@ -238,7 +234,7 @@ fun main() {
             }
             5 -> {
                 println("Digite o numero da cadeira a ser removido")
-                var cadeira = 0
+                var cadeira: Int
                 while (true) {
                     try {
                         cadeira = readLine()!!.toInt()
@@ -249,7 +245,7 @@ fun main() {
                 }
                 if (sessao.consultarCadeiraVazia(cadeira)) {
                     val espec = sessao.consultarEspectador(cadeira)
-                    println("${espec.apresentar()}")
+                    println(espec.apresentar())
 
                     println("deseja realmente cancelar esse ingresso? [s/n]")
                     val yesOrNot = readLine()!!
@@ -298,7 +294,7 @@ fun main() {
                                 val nome = readLine()!!
                                 if (espec.setNome(nome)) {
                                     println("Nome editado com sucesso")
-                                    gerencia.atualizarEspec(cpf, espec)
+                                    gerencia.atualizarEspectador(cpf, espec)
                                 } else {
                                     println("Nome não editado")
                                 }
@@ -308,7 +304,7 @@ fun main() {
                                 val cpfN = readLine()!!
                                 if (espec.setCpf(cpfN)) {
                                     println("CPF editado com sucesso")
-                                    gerencia.atualizarEspec(cpf, espec)
+                                    gerencia.atualizarEspectador(cpf, espec)
                                 } else {
                                     println("CPF não editado")
                                 }
@@ -318,7 +314,7 @@ fun main() {
                                 val rg = readLine()!!
                                 if (espec.setRg(rg)) {
                                     println("RG editado com sucesso")
-                                    gerencia.atualizarEspec(cpf, espec)
+                                    gerencia.atualizarEspectador(cpf, espec)
                                 } else {
                                     println("RG não editado")
                                 }
@@ -328,7 +324,7 @@ fun main() {
                                 val email = readLine()!!
                                 if (espec.setEmail(email)) {
                                     println("Email editado com sucesso")
-                                    gerencia.atualizarEspec(cpf, espec)
+                                    gerencia.atualizarEspectador(cpf, espec)
                                 } else {
                                     println("Email não editado")
                                 }
@@ -355,5 +351,3 @@ fun main() {
     } while (opc != 7)
 
 }
-
-

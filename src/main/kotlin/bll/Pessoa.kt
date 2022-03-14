@@ -1,4 +1,4 @@
-package BLL
+package bll
 
 import java.util.regex.Pattern
 
@@ -13,40 +13,36 @@ abstract class Pessoa(
     companion object {
 
         fun validaCpf(cpf: String): Boolean {
-            var isValid = true
+            val isValid = true
             val expression = "\\d{3}.\\d{3}.\\d{3}-\\d{2}"
             val pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
             val matcher = pattern.matcher(cpf)
             if (!matcher.matches()) {
-                isValid = false
                 throw Exception("CPF Incorreto")
             }
             return isValid
         }
 
         fun validaRg(rg: String): Boolean {
-            var isValid = true
+            val isValid = true
             val expression = "\\d{2}.\\d{3}.\\d{3}-\\d"
             val pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
             val matcher = pattern.matcher(rg)
             if (!matcher.matches()) {
-                isValid = false
                 throw Exception("RG Incorreto")
             }
             return isValid
         }
 
         fun validaEmail(email: CharSequence): Boolean {
-            var isValid = true
+            val isValid = true
             val expression = "^[\\w.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
             val pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE)
             val matcher = pattern.matcher(email)
             if (!matcher.matches()) {
-                isValid = false
                 throw Exception("Email Incorreto")
             }
             return isValid
-
         }
     }
 
@@ -111,19 +107,17 @@ abstract class Pessoa(
     fun getPcd(): Boolean {
         return this.pcd
     }
+
     @JvmName("setPcdX")
-    fun setPcd(pdc: Boolean){
+    fun setPcd(pdc: Boolean) {
         this.pcd = pcd
     }
-
 
     open fun apresentar(): String {
         return "Nome: $nome\n" +
                 "CPF: $cpf\n" +
                 "RG: $rg\n" +
                 "Email: $email\n"
-
-
     }
 
 
